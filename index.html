@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta charset="UTF-8">
+  <title>ShopList</title>
+  <link href="src/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="c-container" id="container">
+  <header class="c-header">
+    <h1 class="c-header__title">ShopList</h1>
+  </header>
+  <main class="c-main">
+    <table class="c-list-items">
+      <thead class="c-list-items-head">
+      <tr>
+        <th class="c-list-items-head-column c-list-items-head-column_item-name">Item</th>
+        <th class="c-list-items-head-column c-list-items-head-column_amount">Amount</th>
+      </tr>
+      </thead>
+      <tbody class="c-list-items-body" id="list-items"></tbody>
+    </table>
+    <form class="c-list-item-creator" id="list-item-creator">
+      <label class="c-list-creator-field__label" for="item-name">Item:</label>
+      <input id="item-name" list="item-names" name="item-name" required type="text">
+      <label class="c-list-creator-field__label" for="item-amount">Amount:</label>
+      <input id="item-amount" min="1" name="item-amount" required type="number" value="1">
+      <input class="c-list-item-creator-submit" type="submit" value="Add">
+      <datalist id="item-names"></datalist>
+    </form>
+  </main>
+
+</div>
+<script src="src/Api.js" type="application/javascript"></script>
+<script src="src/Item.js" type="application/javascript"></script>
+<script src="src/Items.js" type="application/javascript"></script>
+<script src="src/ListItem.js" type="application/javascript"></script>
+<script src="src/ListItems.js" type="application/javascript"></script>
+<script src="src/index.js" type="application/javascript"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+html {
+  position: relative;
+  min-height: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+.c-container {
+  margin: 0 auto;
+  width: 90%;
+}
+
+.c-list-items {
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.c-list-items-head {
+
+  border-bottom: 2px solid rgba(0, 0, 0, .1);
+}
+
+.c-list-items-head-column {
+  text-align: left;
+  padding: 10px;
+}
+
+.c-list-items-head-column_amount {
+
+  white-space: nowrap;
+  width: 1px;
+}
+
+.c-list-item {
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+
+.c-list-item:hover {
+  background-color: rgba(0, 0, 0, .05);
+}
+
+.c-list-item_editing {
+  background-color: rgba(0, 0, 0, .04);
+}
+
+.c-list-item_disabled {
+  font-style: italic;
+  color: rgba(0, 0, 0, .5);
+  cursor: not-allowed;
+}
+
+.c-list-item_disabled:hover {
+  background-color: transparent;
+}
+
+.c-list-item_disabled .c-list-item-action {
+  cursor: not-allowed;
+  background-color: #b5b5b5;
+}
+
+.c-list-item_disabled .c-list-item-action:active {
+  background-color: #b5b5b5;
+}
+
+.c-list-item-name {
+  padding: 10px;
+}
+
+.c-list-item-amount {
+  padding: 10px;
+}
+
+.c-list-item-amount__editor {
+  display: none;
+  padding: 5px 5px 4px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  border-radius: 0;
+  width: 100%;
+  font-size: inherit;
+}
+
+.c-list-item-amount__editor:focus {
+  border-bottom-color: #4f8dd6;
+}
+
+
+.c-list-item-actions {
+  padding: 6px 5px;
+  text-align: right;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.c-list-item-shared-actions {
+  position: relative;
+  padding: 0;
+  width: 35px;
+}
+
+.c-list-item-action, .c-list-item-shared-action {
+  padding: 6px 8px;
+  border: none;
+  margin: 0 2px;
+  background: none;
+  color: rgba(255, 255, 255, .8);
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 3px;
+  line-height: 100%;
+}
+
+.c-list-item-shared-action {
+  position: absolute;
+  bottom: 0;
+  transform: translate(3px, 50%);
+  padding: 6px 6px;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  z-index: 1;
+}
+
+.c-list-item:last-child .c-list-item-shared-action {
+  display: none;
+}
+
+.c-list-item-shared-action_move::before {
+  content: '\21C5';
+}
+
+.c-list-item-action_edit, .c-list-item-shared-action_move {
+  background-color: #4e7dc5;
+}
+
+.c-list-item-action_edit:active, .c-list-item-shared-action_move:active {
+  background-color: #4e6bb3;
+}
+
+.c-list-item-action_delete {
+  background-color: #d83d35;
+}
+
+.c-list-item-action_delete:active {
+  background-color: #b23d35;
+}
+
+.c-list-item-action_save {
+  background-color: #4ca744;
+}
+
+.c-list-item-action_save:active {
+  background-color: #458b44;
+}
+
+.c-list-item-action_cancel {
+  background-color: #ea9d29;
+}
+
+.c-list-item-action_cancel:active {
+  background-color: #cb7d29;
+}
+
+
+.c-list-item-shared-action_disabled {
+  cursor: not-allowed;
+  background-color: #b5b5b5;
+}
+
+.c-list-item-shared-action_disabled:active {
+  background-color: #b5b5b5;
+}
+
+.c-list-item-action_save {
+  display: none;
+}
+
+.c-list-item-action_cancel {
+  display: none;
+}
+
+.c-list-item_editing .c-list-item-amount {
+  padding: 5px;
+}
+
+.c-list-item_editing .c-list-item-amount__container {
+  display: none;
+}
+
+.c-list-item_editing .c-list-item-amount__editor {
+  display: inline-block;
+}
+
+.c-list-item_editing .c-list-item-action_edit {
+  display: none;
+}
+
+.c-list-item_editing .c-list-item-action_delete {
+  display: none;
+}
+
+.c-list-item_editing .c-list-item-action_save {
+  display: inline-block;
+}
+
+.c-list-item_editing .c-list-item-action_cancel {
+  display: inline-block;
+}
+
+@media (min-width: 560px) {
+  .c-container {
+    width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
+  .c-container {
+    width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .c-container {
+    width: 940px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .c-container {
+    width: 1140px;
+  }
+}

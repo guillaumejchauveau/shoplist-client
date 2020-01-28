@@ -28,14 +28,35 @@ class ListItems {
     this._el = el
     this._api = api
     this._items = items
+    const itemNameField = this._listItemCreator.elements.namedItem('item-name')
+    const itemAmountField = this._listItemCreator.elements.namedItem('item-amount')
+    this._listItemCreator.addEventListener('input', () => {
+      const item = this._items.getItemByName(itemNameField.value)
+      if (item === null) {
+        itemNameField.setCustomValidity('Invalid name')
+      } else if (item.disabled) {
+        itemNameField.setCustomValidity('Item already in list')
+      } else {
+        itemNameField.setCustomValidity('')
+      }
+
+      const amount = itemAmountField.valueAsNumber
+      if (isNaN(amount) || amount < 1) {
+        itemAmountField.setCustomValidity('Invalid amount')
+      } else {
+        itemAmountField.setCustomValidity('')
+      }
+    })
     this._listItemCreator.addEventListener('submit', e => {
       e.preventDefault()
-      const data = new FormData(this._listItemCreator)
-      const item = this._items.getItemByName(data.get('item-name'))
+      const item = this._items.getItemByName(itemNameField.value)
+      const amount = itemAmountField.valueAsNumber
+
+      item.disable()
       const listItem = new ListItem(
         this._api,
         item,
-        Number.parseInt(data.get('item-amount')),
+        amount,
         this.getMaxPosition() + 1
       )
       this._listItemCreator.reset()
@@ -48,6 +69,7 @@ class ListItems {
         })
         .catch(reason => {
           console.error(reason)
+          this._api.showError()
         })
     })
   }
@@ -79,9 +101,11 @@ class ListItems {
           this._listItems = []
           this._el.innerHTML = ''
           for (const data of response.content) {
+            const item = this._items.getItem(data.itemId)
+            item.disable()
             const listItem = new ListItem(
               this._api,
-              this._items.getItem(data.itemId),
+              item,
               data.amount,
               data.position
             )
@@ -104,8 +128,8 @@ class ListItems {
     }
 
     if (
-      i === this._listItems.length ||
-      this._listItems[i + 1].state !== ListItemState.DISABLED
+      i === this._listItems.length - 1 ||
+      (i + 1 < this._listItems.length && this._listItems[i + 1].state !== ListItemState.DISABLED)
     ) {
       for (const action of Object.values(this._listItems[i].sharedActions)) {
         action.classList.remove('c-list-item-shared-action_disabled')
@@ -120,9 +144,13 @@ class ListItems {
       if (i === -1) {
         return
       }
-      this._listItems.splice(i, 1)
       this._el.removeChild(listItem.el)
       this.enableSharedActions(i)
+      this._listItems.splice(i, 1)
+      if (i < this._listItems.length) {
+        this._listItems[i].setState(this._listItems[i].state)
+      }
+      listItem.item.enable()
     }
     const stateChangeHandler = () => {
       const i = this._listItems.indexOf(listItem)
@@ -174,11 +202,13 @@ class ListItems {
           .then(() => listItem.setState(listItemState))
           .catch(reason => {
             console.error(reason)
+            this._api.showError()
           })
         otherListItem.save()
           .then(() => otherListItem.setState(otherListItemState))
           .catch(reason => {
             console.error(reason)
+            this._api.showError()
           })
       }
     }

@@ -48,4 +48,8 @@ class Api {
       }).catch(reject)
     })
   }
+
+  showError () {
+    alert('A server request failed, try to reload the page')
+  }
 }

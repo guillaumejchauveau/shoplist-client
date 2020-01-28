@@ -30,7 +30,7 @@ class ListItem extends EventTarget {
   constructor (api, item, amount, position) {
     super()
     this._api = api
-    this._itemId = item.id
+    this._item = item
 
     const nameNode = document.createElement('td')
     nameNode.classList.add('c-list-item-name')
@@ -94,7 +94,14 @@ class ListItem extends EventTarget {
     })
     saveNode.addEventListener('click', () => {
       if (this._state === ListItemState.EDITING) {
-        this.amount = this._amountInput.valueAsNumber
+        const amount = this._amountInput.valueAsNumber
+        if (isNaN(amount) || amount < 1) {
+          this._amountInput.setCustomValidity('Invalid amount')
+          return
+        } else {
+          this._amountInput.setCustomValidity('')
+        }
+        this.amount = amount
         this.setState(ListItemState.DISABLED)
         this.save()
           .then(() => {
@@ -102,6 +109,7 @@ class ListItem extends EventTarget {
           })
           .catch(reason => {
             console.error(reason)
+            this._api.showError()
           })
       }
     })
@@ -114,19 +122,20 @@ class ListItem extends EventTarget {
           })
           .catch(reason => {
             console.error(reason)
+            this._api.showError()
           })
       }
     })
   }
 
   /**
-   * @field {number}
+   * @field {Item}
    * @private
    */
-  _itemId
+  _item
 
-  get itemId () {
-    return this._itemId
+  get item () {
+    return this._item
   }
 
   /**
@@ -226,7 +235,7 @@ class ListItem extends EventTarget {
 
   refresh () {
     return new Promise((resolve, reject) => {
-      this._api.fetch('GET', `/list/${this.itemId}`)
+      this._api.fetch('GET', `/list/${this.item.id}`)
         .then(response => {
           if (response.status !== 200) {
             reject(response)
@@ -243,13 +252,13 @@ class ListItem extends EventTarget {
       let fetch
       if (create) {
         fetch = this._api.fetch('POST', '/list', {}, {
-          itemId: this.itemId,
+          itemId: this.item.id,
           amount: this.amount,
           position: this.position
         })
       } else {
-        fetch = this._api.fetch('PUT', `/list/${this.itemId}`, {}, {
-          itemId: this.itemId,
+        fetch = this._api.fetch('PUT', `/list/${this.item.id}`, {}, {
+          itemId: this.item.id,
           amount: this.amount,
           position: this.position
         })
@@ -267,7 +276,7 @@ class ListItem extends EventTarget {
 
   delete () {
     return new Promise((resolve, reject) => {
-      this._api.fetch('DELETE', `/list/${this.itemId}`)
+      this._api.fetch('DELETE', `/list/${this.item.id}`)
         .then(response => {
           if (response.status !== 204) {
             reject(response)

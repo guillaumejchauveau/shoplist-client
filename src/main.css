@@ -21,6 +21,10 @@ body {
   width: 90%;
 }
 
+/**
+ * List items table
+ */
+
 .c-list-items {
   position: relative;
   width: 100%;
@@ -28,7 +32,6 @@ body {
 }
 
 .c-list-items-head {
-
   border-bottom: 2px solid rgba(0, 0, 0, .1);
 }
 
@@ -42,6 +45,10 @@ body {
   white-space: nowrap;
   width: 1px;
 }
+
+/**
+ * List items table row
+ */
 
 .c-list-item {
   border-top: 1px solid rgba(0, 0, 0, .1);
@@ -97,7 +104,6 @@ body {
   border-bottom-color: #4f8dd6;
 }
 
-
 .c-list-item-actions {
   padding: 6px 5px;
   text-align: right;
@@ -143,6 +149,10 @@ body {
   content: '\21C5';
 }
 
+/**
+ * List item actions colors
+ */
+
 .c-list-item-action_edit, .c-list-item-shared-action_move {
   background-color: #4e7dc5;
 }
@@ -185,6 +195,10 @@ body {
   background-color: #b5b5b5;
 }
 
+/*
+ * List item state modifiers
+ */
+
 .c-list-item-action_save {
   display: none;
 }
@@ -219,6 +233,57 @@ body {
 
 .c-list-item_editing .c-list-item-action_cancel {
   display: inline-block;
+}
+
+/**
+ * List item creator
+ */
+
+.c-list-item-creator-container {
+  margin-top: 30px;
+  border: 1px solid rgba(0, 0, 0, .1);
+}
+
+.c-list-item-creator-legend {
+  font-size: 1.5rem;
+}
+
+.c-list-item-creator {
+  padding: 20px;
+}
+
+.c-list-item-creator-field {
+  margin: 5px;
+  padding: 5px 5px 4px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+  border-radius: 0;
+}
+
+.c-list-item-creator-field:focus {
+  border-bottom-color: #4f8dd6;
+}
+
+.c-list-item-creator-field:invalid {
+  border-bottom-color: #d83d35;
+}
+
+.c-list-item-creator-submit {
+  padding: 6px 8px;
+  border: none;
+  margin: 0 2px;
+  color: rgba(255, 255, 255, .8);
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 3px;
+  line-height: 100%;
+  background-color: #4ca744;
+}
+
+.c-list-item-creator-submit:active {
+  background-color: #458b44;
 }
 
 @media (min-width: 560px) {

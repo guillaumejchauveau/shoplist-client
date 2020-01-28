@@ -61,9 +61,9 @@ class Items {
           const items = {}
           this._datalist.innerHTML = ''
           for (const data of response.content) {
-            items[data.id] = new Item(data.id, data.name)
             const option = document.createElement('option')
             option.value = data.name
+            items[data.id] = new Item(data.id, data.name, option)
             this._datalist.append(option)
           }
           this._items = items

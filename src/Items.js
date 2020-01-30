@@ -1,14 +1,21 @@
+/**
+ * Represents the item collection of ShopList.
+ */
 class Items {
   /**
    * @field {Api}
    * @private
    */
   _api
+  /**
+   * @field {HTMLDataListElement}
+   * @private
+   */
   _datalist
 
   /**
-   * @param {Api} api
-   * @param {HTMLDataListElement} datalist
+   * @param {Api} api A ShopList API instance
+   * @param {HTMLDataListElement} datalist The items <datalist> element
    */
   constructor (api, datalist) {
     this._api = api
@@ -17,16 +24,20 @@ class Items {
   }
 
   /**
-   * @field {Item[]}
+   * @field {Object.<number, Item>}
    * @private
    */
   _items
 
+  /**
+   * @return {Item[]} The collection of items
+   */
   get items () {
     return Object.values(this._items)
   }
 
   /**
+   * Retrieves a specific item using its ID
    * @param {number} itemId
    * @return {Item|undefined}
    */
@@ -35,8 +46,9 @@ class Items {
   }
 
   /**
+   * Retrieves a specific item using its name
    * @param {string} itemName
-   * @return {Item}
+   * @return {Item|undefined}
    */
   getItemByName (itemName) {
     for (const item of Object.values(this._items)) {
@@ -44,11 +56,12 @@ class Items {
         return item
       }
     }
-    return null
+    return undefined
   }
 
   /**
-   * @return {Promise}
+   * Refreshes the item collection using the API.
+   * @return {Promise<void>}
    */
   refresh () {
     return new Promise((resolve, reject) => {

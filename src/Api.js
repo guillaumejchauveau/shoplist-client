@@ -1,3 +1,6 @@
+/**
+ * Class used to communicate with a ShopList API.
+ */
 class Api {
   /**
    * @var {string}
@@ -6,18 +9,21 @@ class Api {
   _url
 
   /**
-   * @param {string} url
+   * @param {string} url The base API url
    */
   constructor (url) {
     this._url = url
   }
 
   /**
-   * @param {string} method
-   * @param {string} path
-   * @param {Object} query
-   * @param {Object} body
-   * @return {Promise}
+   * Processes an API call using the global fetch function.
+   *
+   * @param {string} method The HTTP method for the call
+   * @param {string} path The call path relative to the base API url
+   * @param {Object} query Query parameters for the call
+   * @param {Object} body Request content for the call
+   * @return {Promise<{status: number, content: *}>} A promise resolving to an
+   *  object containing  the status and the parsed content of the response
    */
   fetch (method, path, query = {}, body = null) {
     let fetchUrl = this._url + path + '?'
@@ -49,6 +55,9 @@ class Api {
     })
   }
 
+  /**
+   * A helper function for warning the user that an API call failed.
+   */
   showError () {
     alert('A server request failed, try to reload the page')
   }

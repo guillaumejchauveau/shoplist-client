@@ -12,9 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
       listItems.refresh()
         .catch(reason => {
           console.error(reason)
+          api.showError()
         })
     })
     .catch(reason => {
       console.error(reason)
+      api.showError()
     })
 })

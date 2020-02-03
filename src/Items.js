@@ -60,6 +60,27 @@ class Items {
   }
 
   /**
+   * Creates a new item with the given properties
+   * @param {string} name
+   * @return {Promise<Item>}
+   */
+  createItem (name) {
+    const option = document.createElement('option')
+    option.value = name
+    const item = new Item(this._api, 0, name, option)
+    return item.save()
+  }
+
+  /**
+   * Inserts the item in the dataset
+   * @param {Item} item
+   */
+  insertItem (item) {
+    this._items[item.id] = item
+    this._datalist.append(item.optionElement)
+  }
+
+  /**
    * Refreshes the item collection using the API.
    * @return {Promise<void>}
    */
@@ -71,15 +92,13 @@ class Items {
             reject(response)
             return
           }
-          const items = {}
+          this._items = {}
           this._datalist.innerHTML = ''
           for (const data of response.content) {
             const option = document.createElement('option')
             option.value = data.name
-            items[data.id] = new Item(data.id, data.name, option)
-            this._datalist.append(option)
+            this.insertItem(new Item(this._api, data.id, data.name, option))
           }
-          this._items = items
           resolve()
         })
         .catch(reject)

@@ -272,7 +272,7 @@ class ListItem extends EventTarget {
 
   /**
    * Refreshes the list item using the API.
-   * @return {Promise<void>}
+   * @return {Promise<ListItem>}
    */
   refresh () {
     return new Promise((resolve, reject) => {
@@ -286,7 +286,7 @@ class ListItem extends EventTarget {
           this.amount = response.amount
           this.position = response.position
           this.setState(ListItemStates.IDLE)
-          resolve()
+          resolve(this)
         }).catch(reject)
     })
   }
@@ -295,7 +295,7 @@ class ListItem extends EventTarget {
    * Saves the list item using the API.
    * @param create Indicates if the list item must be added to the collection
    *  instead of being updated
-   * @return {Promise<void>}
+   * @return {Promise<ListItem>}
    */
   save (create = false) {
     return new Promise((resolve, reject) => {
@@ -321,7 +321,7 @@ class ListItem extends EventTarget {
           return
         }
         this.setState(ListItemStates.IDLE)
-        resolve()
+        resolve(this)
       }).catch(reject)
     })
   }

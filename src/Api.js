@@ -36,7 +36,10 @@ class Api {
       fetch(fetchUrl, {
         method,
         mode: 'cors',
-        body: body !== null ? JSON.stringify(body) : undefined
+        body: body !== null ? JSON.stringify(body) : undefined,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }).then(response => {
         if (response.status === 204) {
           resolve({

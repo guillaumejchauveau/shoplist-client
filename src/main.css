@@ -285,6 +285,20 @@ body {
   background-color: #458b44;
 }
 
+.c-list-item-creator_disabled {
+  font-style: italic;
+  color: rgba(0, 0, 0, .5);
+}
+
+.c-list-item-creator_disabled .c-list-item-creator-submit {
+  cursor: not-allowed;
+  background-color: #b5b5b5;
+}
+
+.c-list-item_disabled .c-list-item-creator-submit:active {
+  background-color: #b5b5b5;
+}
+
 @media (min-width: 560px) {
   .c-container {
     width: 540px;

@@ -3,17 +3,19 @@
  */
 class Item {
   /**
-   * @field {HTMLElement}
+   * @field {Api}
    * @private
    */
-  _optionElement
+  _api
 
   /**
+   * @param {Api} api A ShopList API instance
    * @param {number} id The internal ID for the item
    * @param {string} name The name of the item
    * @param {HTMLElement} optionElement The corresponding <option> in the items datalist
    */
-  constructor (id, name, optionElement) {
+  constructor (api, id, name, optionElement) {
+    this._api = api
     this._id = id
     this._name = name
     this._optionElement = optionElement
@@ -73,5 +75,41 @@ class Item {
   enable () {
     this._disabled = false
     this._optionElement.disabled = false
+  }
+
+  /**
+   * @field {HTMLElement}
+   * @private
+   */
+  _optionElement
+
+  /**
+   * @return {HTMLElement}
+   */
+  get optionElement () {
+    return this._optionElement
+  }
+
+  /**
+   * Saves the item using the API.
+   * @return {Promise<Item>}
+   */
+  save () {
+    return new Promise((resolve, reject) => {
+      this.disable()
+
+      this._api.fetch('POST', '/items', {}, {
+        id: this.id,
+        name: this.name
+      }).then(response => {
+        if (response.status !== 200 && response.status !== 201) {
+          reject(response)
+          return
+        }
+        this._id = response.content.id
+        this.enable()
+        resolve(this)
+      }).catch(reject)
+    })
   }
 }

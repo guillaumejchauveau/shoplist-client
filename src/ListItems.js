@@ -27,6 +27,11 @@ class ListItems {
    * @private
    */
   _listItemCreator
+  /**
+   * @field {boolean}
+   * @private
+   */
+  _listItemCreatorDisabled
 
   /**
    * @param {HTMLElement} el The table element the will contain the list items' row elements
@@ -36,6 +41,7 @@ class ListItems {
    */
   constructor (el, listItemCreator, api, items) {
     this._listItemCreator = listItemCreator
+    this._listItemCreatorDisabled = false
     this._el = el
     this._api = api
     this._items = items
@@ -47,9 +53,7 @@ class ListItems {
 
     this._listItemCreator.addEventListener('input', () => {
       const item = this._items.getItemByName(itemNameField.value)
-      if (item === undefined) {
-        itemNameField.setCustomValidity('Invalid name')
-      } else if (item.disabled) {
+      if (item !== undefined && item.disabled) {
         itemNameField.setCustomValidity('Item already in list')
       } else {
         itemNameField.setCustomValidity('')
@@ -67,25 +71,58 @@ class ListItems {
 
     this._listItemCreator.addEventListener('submit', e => {
       e.preventDefault()
+      if (this._listItemCreatorDisabled) {
+        return
+      }
+      this.disableListItemCreator()
       const item = this._items.getItemByName(itemNameField.value)
       const amount = itemAmountField.valueAsNumber
 
-      item.disable()
-      const listItem = new ListItem(
-        this._api,
-        item,
-        amount,
-        this.getMaxPosition() + 1
-      )
-      this._listItemCreator.reset() // Clears the form.
-      this.attachListeners(listItem)
-      this.insertListItem(listItem)
-      listItem.save(true)
+      let createListItem
+      if (item !== undefined) {
+        createListItem = this.createListItem(item, amount)
+      } else {
+        createListItem = this._items.createItem(itemNameField.value)
+          .then(item => {
+            this._items.insertItem(item)
+            return this.createListItem(item, amount)
+          })
+      }
+      createListItem
+        .then(listItem => {
+          this.enableListItemCreator()
+          this._listItemCreator.reset() // Clears the form.
+          return this.insertListItem(listItem)
+        })
         .catch(reason => {
           console.error(reason)
           this._api.showError()
         })
     })
+  }
+
+  /**
+   * Prevents the utilization of the list item creator.
+   * @private
+   */
+  disableListItemCreator () {
+    this._listItemCreatorDisabled = true
+    this._listItemCreator.classList.add('c-list-item-creator_disabled')
+    for (const input of this._listItemCreator.elements) {
+      input.setAttribute('disabled', '')
+    }
+  }
+
+  /**
+   * Permits the utilization of the list item creator.
+   * @private
+   */
+  enableListItemCreator () {
+    this._listItemCreatorDisabled = false
+    this._listItemCreator.classList.remove('c-list-item-creator_disabled')
+    for (const input of this._listItemCreator.elements) {
+      input.removeAttribute('disabled')
+    }
   }
 
   /**
@@ -104,6 +141,46 @@ class ListItems {
       }
     }
     return max
+  }
+
+  /**
+   * Creates a new list item with the given properties.
+   * @param {Item} item
+   * @param {number} amount
+   * @return {Promise<ListItem>}
+   */
+  createListItem (item, amount) {
+    item.disable()
+    const listItem = new ListItem(
+      this._api,
+      item,
+      amount,
+      this.getMaxPosition() + 1
+    )
+    return listItem.save(true)
+  }
+
+  /**
+   * Inserts the given list item into the table.
+   * @param {ListItem} listItem
+   */
+  insertListItem (listItem) {
+    this.attachListeners(listItem)
+    let i = 0
+    for (; i < this._listItems.length; i++) {
+      if (this._listItems[i] === listItem) {
+        throw new Error('List item already inserted')
+      }
+      if (this._listItems[i].position > listItem.position) {
+        break
+      }
+    }
+    if (i === this._listItems.length) {
+      this._el.append(listItem.el)
+    } else {
+      this._el.insertBefore(listItem.el, this._listItems[i].el)
+    }
+    this._listItems.splice(i, 0, listItem)
   }
 
   /**
@@ -130,7 +207,6 @@ class ListItems {
               data.amount,
               data.position
             )
-            this.attachListeners(listItem)
             this.insertListItem(listItem)
           }
           resolve()
@@ -269,29 +345,6 @@ class ListItems {
     listItem.addEventListener('delete', deleteListener)
     listItem.addEventListener('stateChange', stateChangeListener)
     listItem.sharedActions.move.addEventListener('click', moveListener)
-  }
-
-  /**
-   * Inserts the given list item into the table.
-   * @param {ListItem} listItem
-   * @private
-   */
-  insertListItem (listItem) {
-    let i = 0
-    for (; i < this._listItems.length; i++) {
-      if (this._listItems[i] === listItem) {
-        throw new Error('List item already inserted')
-      }
-      if (this._listItems[i].position > listItem.position) {
-        break
-      }
-    }
-    if (i === this._listItems.length) {
-      this._el.append(listItem.el)
-    } else {
-      this._el.insertBefore(listItem.el, this._listItems[i].el)
-    }
-    this._listItems.splice(i, 0, listItem)
   }
 }
 
